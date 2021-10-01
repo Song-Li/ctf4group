@@ -1,14 +1,40 @@
 import os, flask
 from tinydb import TinyDB, Query
+from src.challenge_handler import ChallengeHandler
 
 app = flask.Flask(__name__)
 
-def insert_to_db(username, cha_no, flag, ip):
+@app.route("/request", methods=['POST'])
+def request():
     """
-    insert a tuple to db
+    request cookie of a IP and username
+    we identify the user by the cookie
+    return:
+        the generated or selected cookie
     """
-    db = TinyDB('db.json')
-    db.insert({'username': username, 'cha_no': cha_no, 'flag': flag, 'IP': ip})
+    req_json = flask.request.json
+    ip = flask.request.remote_addr
+    username = req_json.get('username')
+    cookie = req_json.get('cookie')
+    cha_handler = ChallengeHandler(ip, username, cookie)
+    return flask.jsonify(cha_handler.info)
+
+@app.route("/getinfo", methods=['POST'])
+def getinfo():
+    """
+    get info based on cookie
+    """
+    req_json = flask.request.json
+    ip = flask.request.remote_addr
+    cookie = req_json.get('cookie')
+    cha_no = req_json.get('cha_no')
+    cha_handler = ChallengeHandler(ip, None, cookie)
+    ret = cha_handler.info
+    if cha_no == '1':
+        pri_key = cha_handler.handle_q1()
+        ret['pri'] = pri_key
+
+    return flask.jsonify(ret)
 
 @app.route("/submit", methods=['POST'])
 def submit():
@@ -19,9 +45,12 @@ def submit():
     ip = flask.request.remote_addr
     cha_no = flag.get('challenge_no')
     flag_res = flag.get('flag')
-    insert_to_db(flag.get('username'), cha_no, flag_res, ip)
+    username = flag.get('username')
+    # check if this IP already submitted
+
+    cha_handler = ChallengeHandler(ip, username, None)
     if cha_no == "1":
-        if flag_res.upper() == "7A13CD44A38A4F7A18898FF16D45A682":
+        if cha_handler.verify_flag(flag_res, '1'):
             return flask.send_from_directory(os.path.join(app.static_folder, 'challenges'), 'q2.html')
         else:
             return "不太对啊，再试试？"
@@ -58,4 +87,4 @@ def index(jsname=None, cssname=None, imgname=None, vendor=None, fonts=None, cha=
     else:
         return flask.send_from_directory(app.static_folder, 'index.html')
 
-app.run(host='0.0.0.0', port=9870)
+app.run(host='0.0.0.0', port=9870, debug=True)
