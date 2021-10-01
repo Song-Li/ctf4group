@@ -1,5 +1,6 @@
 $(document).ready(function() {
   $('#formButton').on('click', function() {
+    this.disabled = true;
     if ($('#black').css('opacity') == 0) $('#black').css('opacity', 1);
     else $('#black').css('opacity', 0);
     setTimeout(function(){
