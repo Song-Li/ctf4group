@@ -5,6 +5,7 @@ logs
 *.csv
 *.dat
 *.out
+*/__pycache__/
 
 # esprima-csv
 node_modules/
