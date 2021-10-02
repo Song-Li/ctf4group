@@ -38,7 +38,7 @@ def getinfo():
         ret['res'] = 'ready'
     return flask.jsonify(ret)
 
-@app.route("/submit", methods=['POST', 'GET'])
+@app.route("/submit", methods=['POST'])
 def submit():
     """
     get the user's flag

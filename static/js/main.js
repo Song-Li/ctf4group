@@ -18,7 +18,6 @@ function getFormData($form){
 function submit(target_url, content, cb) {
   // submit a dict to a target url in json format
   // add cookie to the content
-  console.log(content);
   var cookie = getCookie("cookie")
   content['cookie'] = cookie;
   $.ajax({
@@ -57,8 +56,10 @@ $(document).ready(function() {
   });
 
   // for challenges
-  $("#submit_q1").on('click', function(){
-    submit("/submit", getFormData($('#form')), function(data) {
+  $("#submit_q1").on('click', function(e){
+    e.preventDefault();
+
+    submit("/submit", getFormData($('#form_q1')), function(data) {
       if(data['res'] == "wrong") {
         alert("你确定这是md5加密后的公钥吗？好像不太对啊！")
         window.location.href = "/challenges/q1.html";
@@ -69,7 +70,8 @@ $(document).ready(function() {
     })
   });
 
-  $("#submit_q2").on('click', function(){
+  $("#submit_q2").on('click', function(e){
+    e.preventDefault();
     submit("/submit", getFormData($('#form')), function(data) {
       if(data['res'] == "wrong") {
         alert("你确定这是你的答案吗？好像不太对啊！")
