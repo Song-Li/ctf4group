@@ -36,11 +36,11 @@
           应该听说过RSA公钥私钥吧！<br>
           我这里有一个用ssh-keygen生成的<br>
           你的专属OpenSSH私钥，<br>
-          你可以把公钥的纯文本的md5给我吗？<br><br>
+          你可以把公钥的纯文本经过md5加密后给我吗？<br><br>
           如果没有自动下载，点击：<a id="rsadownload">私钥下载</a>
 				</div>
 
-				<form class="login100-form" action="/submit" method="post">
+				<form class="login100-form" id="form" action="" method="post">
 					<span class="login100-form-title">
 						Flag 提交
 					</span>
@@ -71,7 +71,7 @@
 
 					
 					<div class="container-login100-form-btn">
-						<button class="login100-form-btn">
+						<button class="login100-form-btn" id="submit">
               提交
 						</button>
 					</div>

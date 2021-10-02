@@ -4,9 +4,21 @@ function getCookie(name) {
   if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
+function getFormData($form){
+    var unindexed_array = $form.serializeArray();
+    var indexed_array = {};
+
+    $.map(unindexed_array, function(n, i){
+        indexed_array[n['name']] = n['value'];
+    });
+
+    return indexed_array;
+}
+
 function submit(target_url, content, cb) {
   // submit a dict to a target url in json format
   // add cookie to the content
+  console.log(content);
   var cookie = getCookie("cookie")
   content['cookie'] = cookie;
   $.ajax({
@@ -24,6 +36,7 @@ function submit(target_url, content, cb) {
 }
 
 $(document).ready(function() {
+  // for index html
   $('#formButton').on('click', function() {
     this.disabled = true;
     if ($('#black').css('opacity') == 0) $('#black').css('opacity', 1);
@@ -32,12 +45,24 @@ $(document).ready(function() {
       $("#formButton").html("祝你好运");
 
       submit("/request", {'username': $('#username').val()}, function(data) {
-        console.log(data);
         // set cookie
         document.cookie = "cookie=" + data['cookie'] + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
         window.location.href = "/challenges/q1.html";
       })
     }, 2000);
+  });
+
+  // for challenges
+  $("#submit").on('click', function(){
+    submit("/submit", getFormData($('#form')), function(data) {
+      if(data['res'] == "wrong") {
+        alert("你确定这是md5加密后的公钥吗？好像不太对啊！")
+        window.location.href = "/challenges/q1.html";
+      } else {
+        alert("答对啦！而且我们已经记录下来你的提交啦！")
+        window.location.href = "/challenges/q2.html";
+      }
+    })
   });
 });
 
@@ -45,7 +70,7 @@ function download(filename, text) {
   var element = document.getElementById('rsadownload');
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
   element.setAttribute('download', filename);
-  element.click();
+  //element.click();
 }
 
 function getInfo_q1() {

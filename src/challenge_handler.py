@@ -1,5 +1,6 @@
 from tinydb import TinyDB, Query
 import uuid
+from datetime import datetime
 
 class ChallengeHandler:
     """
@@ -17,6 +18,26 @@ class ChallengeHandler:
             # first time visiter
             user_dict = self.create_new_user(IP, username)
             self.info = user_dict
+
+    def add_to_submit(self, flag, cha_no):
+        """
+        once verified, add the info to submit
+        return:
+            status: -1: already submitted, 1: success
+        """
+        user_dict = {}
+        user_dict['IP'] = self.ip
+        user_dict['username'] = self.info.get('username')
+        user_dict['cookie'] = self.info.get('cookie')
+        user_dict['cha_no'] = cha_no
+        selected = self.submit_table.search(self.query.fragment(user_dict))
+        if len(selected):
+            return -1
+
+        user_dict['flag'] = flag
+        user_dict['time'] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        self.submit_table.insert(user_dict)
+        return 1
 
     def insert_right_answer(self, question, answer, cha_no):
         """
@@ -91,7 +112,7 @@ class ChallengeHandler:
         """
         selected = self.flag_table.search(self.query.fragment({'cookie': self.info.get('cookie'), 'cha_no': cha_no}))
         if len(selected):
-            print("Right:", selected[0]['answer'])
+            print("Right:", selected[0]['answer'], "User: ", flag)
             return flag.lower() == selected[0]['answer']
         return False
 
