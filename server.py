@@ -33,6 +33,9 @@ def getinfo():
     if cha_no == '1':
         pri_key = cha_handler.handle_q1()
         ret['pri'] = pri_key
+    if cha_no == '2':
+        cha_handler.handle_q2()
+        ret['res'] = 'ready'
     return flask.jsonify(ret)
 
 @app.route("/submit", methods=['POST', 'GET'])
@@ -57,7 +60,11 @@ def submit():
         else:
             return flask.jsonify({"res": "wrong"})
     if cha_no == "2":
-        return flask.send_from_directory(os.path.join(app.static_folder, 'challenges'), 'q3.html')
+        if cha_handler.verify_flag(flag_res, '2'):
+            add_res = cha_handler.add_to_submit(flag_res, cha_no)
+            return flask.jsonify({"res": "right"})
+        else:
+            return flask.jsonify({"res": "wrong"})
     if cha_no == "3":
         return flask.send_from_directory(os.path.join(app.static_folder, 'challenges'), 'q4.html')
     if cha_no == "4":

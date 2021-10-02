@@ -43,17 +43,21 @@ $(document).ready(function() {
     else $('#black').css('opacity', 0);
     setTimeout(function(){
       $("#formButton").html("祝你好运");
-
-      submit("/request", {'username': $('#username').val()}, function(data) {
-        // set cookie
-        document.cookie = "cookie=" + data['cookie'] + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
-        window.location.href = "/challenges/q1.html";
-      })
+      if ($("#username").val() == "") {
+        alert("请告诉我们您的QQ号, 方便我们认识您");
+        $("#formButton").prop('disabled', false);
+      } else {
+        submit("/request", {'username': $('#username').val()}, function(data) {
+          // set cookie
+          document.cookie = "cookie=" + data['cookie'] + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
+          window.location.href = "/challenges/q1.html";
+        })
+      }
     }, 2000);
   });
 
   // for challenges
-  $("#submit").on('click', function(){
+  $("#submit_q1").on('click', function(){
     submit("/submit", getFormData($('#form')), function(data) {
       if(data['res'] == "wrong") {
         alert("你确定这是md5加密后的公钥吗？好像不太对啊！")
@@ -64,6 +68,19 @@ $(document).ready(function() {
       }
     })
   });
+
+  $("#submit_q2").on('click', function(){
+    submit("/submit", getFormData($('#form')), function(data) {
+      if(data['res'] == "wrong") {
+        alert("你确定这是你的答案吗？好像不太对啊！")
+        window.location.href = "/challenges/q2.html";
+      } else {
+        alert("答对啦！而且我们已经记录下来你的提交啦！")
+        window.location.href = "/challenges/q3.html";
+      }
+    })
+  });
+
 });
 
 function download(filename, text) {
@@ -81,5 +98,15 @@ function getInfo_q1() {
     $('#username').val(username);
     $('#username').prop('disabled', true);
     download('rsa', data['pri']);
+  });
+}
+
+function getInfo_q2() {
+  // get information from server
+  submit("/getinfo", {'cha_no': '2'}, function(data){
+    cookie = data['cookie']
+    username = data['username']
+    $('#username').val(username);
+    $('#username').prop('disabled', true);
   });
 }

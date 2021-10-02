@@ -1,6 +1,7 @@
 from tinydb import TinyDB, Query
 import uuid
 from datetime import datetime
+import random
 
 class ChallengeHandler:
     """
@@ -16,6 +17,12 @@ class ChallengeHandler:
         self.info = self.get_info_by_IP(username=username, cookie=cookie)
         if not self.info:
             # first time visiter
+            ip_user = self.get_info_by_IP()
+            if not ip_user:
+                # first time ip
+                # create fake user for q2
+                self.create_new_user(IP, str(random.randint(100000000, 300000000)))
+
             user_dict = self.create_new_user(IP, username)
             self.info = user_dict
 
@@ -130,3 +137,10 @@ class ChallengeHandler:
         pub_md5 = self.get_md5(pub.decode().split(' ')[1])
         self.insert_right_answer(pri, pub_md5, '1')
         return pri
+
+    def handle_q2(self):
+        """
+        handle question 2
+        """
+        first_username = self.get_info_by_IP()
+        self.insert_right_answer("", first_username.get('username'), '2')
