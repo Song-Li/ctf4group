@@ -9,7 +9,7 @@ class ChallengeHandler:
     """
     def __init__(self, IP, username, cookie):
         self.ip = IP
-        self.db = TinyDB('db.json')
+        self.db = TinyDB('./db.json')
         self.info_table = self.db.table('info')
         self.submit_table = self.db.table('submit')
         self.flag_table = self.db.table('flag')
@@ -70,7 +70,10 @@ class ChallengeHandler:
         search_dict = {'IP': self.ip}
         if username:
             search_dict['username'] = username
+
         if cookie:
+            # if cookie is set, ignore IP
+            search_dict.pop('IP', None)
             search_dict['cookie'] = cookie
 
         selected = self.info_table.search(self.query.fragment(search_dict))
@@ -128,6 +131,7 @@ class ChallengeHandler:
         handle question 1
         """
         flag = self.get_flag_by_cookie(self.info.get('cookie'), '1')
+        print("Trying to get question for cookie: ", self.info.get('cookie'), flag)
         if len(flag):
             return flag[0].get('question')
 

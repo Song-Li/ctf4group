@@ -96,4 +96,3 @@ def index(jsname=None, cssname=None, imgname=None, vendor=None, fonts=None, cha=
     else:
         return flask.send_from_directory(app.static_folder, 'index.html')
 
-app.run(host='0.0.0.0', port=9870, debug=True)
