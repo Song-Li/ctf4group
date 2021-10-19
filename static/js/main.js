@@ -46,7 +46,7 @@ $(document).ready(function() {
         alert("请告诉我们您的QQ号, 方便我们认识您");
         $("#formButton").prop('disabled', false);
       } else {
-        submit("/request", {'username': $('#username').val()}, function(data) {
+        submit("https://ctfapi.hackgroup.org/request", {'username': $('#username').val()}, function(data) {
           // set cookie
           document.cookie = "cookie=" + data['cookie'] + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
           window.location.href = "/challenges/q1.html";
@@ -59,7 +59,7 @@ $(document).ready(function() {
   $("#submit_q1").on('click', function(e){
     e.preventDefault();
 
-    submit("/submit", getFormData($('#form_q1')), function(data) {
+    submit("https://ctfapi.hackgroup.org/submit", getFormData($('#form_q1')), function(data) {
       if(data['res'] == "wrong") {
         alert("你确定这是md5加密后的公钥吗？好像不太对啊！")
         window.location.href = "/challenges/q1.html";
@@ -72,7 +72,7 @@ $(document).ready(function() {
 
   $("#submit_q2").on('click', function(e){
     e.preventDefault();
-    submit("/submit", getFormData($('#form')), function(data) {
+    submit("https://ctfapi.hackgroup.org/submit", getFormData($('#form')), function(data) {
       if(data['res'] == "wrong") {
         alert("你确定这是你的答案吗？好像不太对啊！")
         window.location.href = "/challenges/q2.html";
@@ -94,7 +94,7 @@ function download(filename, text) {
 
 function getInfo_q1() {
   // get information from server
-  submit("/getinfo", {'cha_no': '1'}, function(data){
+  submit("https://ctfapi.hackgroup.org/getinfo", {'cha_no': '1'}, function(data){
     cookie = data['cookie']
     username = data['username']
     $('#username').val(username);
@@ -105,7 +105,7 @@ function getInfo_q1() {
 
 function getInfo_q2() {
   // get information from server
-  submit("/getinfo", {'cha_no': '2'}, function(data){
+  submit("https://ctfapi.hackgroup.org/getinfo", {'cha_no': '2'}, function(data){
     cookie = data['cookie']
     username = data['username']
     $('#username').val(username);
