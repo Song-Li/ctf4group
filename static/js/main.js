@@ -49,7 +49,7 @@ $(document).ready(function() {
         submit("https://ctfapi.hackgroup.org/request", {'username': $('#username').val()}, function(data) {
           // set cookie
           document.cookie = "cookie=" + data['cookie'] + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
-          window.location.href = "/challenges/q1.html";
+          window.location.href = "./challenges/q1.html";
         })
       }
     }, 2000);
@@ -62,10 +62,10 @@ $(document).ready(function() {
     submit("https://ctfapi.hackgroup.org/submit", getFormData($('#form_q1')), function(data) {
       if(data['res'] == "wrong") {
         alert("你确定这是md5加密后的公钥吗？好像不太对啊！")
-        window.location.href = "/challenges/q1.html";
+        window.location.href = "./challenges/q1.html";
       } else {
         alert("答对啦！而且我们已经记录下来你的提交啦！")
-        window.location.href = "/challenges/q2.html";
+        window.location.href = "./challenges/q2.html";
       }
     })
   });
@@ -75,10 +75,10 @@ $(document).ready(function() {
     submit("https://ctfapi.hackgroup.org/submit", getFormData($('#form')), function(data) {
       if(data['res'] == "wrong") {
         alert("你确定这是你的答案吗？好像不太对啊！")
-        window.location.href = "/challenges/q2.html";
+        window.location.href = "./challenges/q2.html";
       } else {
         alert("答对啦！而且我们已经记录下来你的提交啦！")
-        window.location.href = "/challenges/q3.html";
+        window.location.href = "./challenges/q3.html";
       }
     })
   });
